@@ -1,7 +1,6 @@
 package com.example.alarm.ui.theme
 
 
-import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
@@ -18,10 +17,6 @@ private val darkPalette = Colors(
     menuBackground = Color(0xFF000000),
     inactiveRadioButton = Color(0xFF535378)
 )
-
-fun FloatingActionButtonDefaults.colors() {
-
-}
 
 object Theme {
     val colors: Colors

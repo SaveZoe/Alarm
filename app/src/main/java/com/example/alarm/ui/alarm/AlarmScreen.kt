@@ -1,46 +1,37 @@
 package com.example.alarm.ui.alarm
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Card
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.alarm.ui.theme.Theme
 
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlarmScreen(
 ) {
-    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
-        item {
-            AlarmItem()
-        }
-        item {
-            AlarmItem()
-        }
-        item {
-            AlarmItem()
-        }
-        item {
-            AlarmItem()
-        }
-        item {
-            AlarmItem()
-        }
+    Column {
+        AlarmItem()
+        AlarmItem()
+        AlarmItem()
+        AlarmItem()
     }
 }
 
@@ -49,22 +40,39 @@ fun AlarmScreen(
 fun AlarmItem(
 
 ) {
+    var checked by remember { mutableStateOf(false) }
+    var expandedState by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
-            .width(169.dp)
-            .height(177.dp)
-            .background(color = Color.Red)
+            .fillMaxWidth()
+            .background(color = Theme.colors.primaryBackground)
             .padding(19.dp)
+            .animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearOutSlowInEasing
+                )
+            )
+            .clickable {
+                expandedState = !expandedState
+            },
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(
             Modifier
-                .background(Color.Red)
+                .background(color = Theme.colors.secondaryBackground)
+                .border(border = BorderStroke(0.dp, color = Theme.colors.secondaryBackground))
+                .padding(19.dp),
+            verticalArrangement = Arrangement.Center,
+
         ) {
-            Text(
-                text = "Work",
-                fontSize = 14.sp,
-                color = Color.White
-            )
+            if (expandedState) {
+                Text(
+                    text = "Work",
+                    fontSize = 14.sp,
+                    color = Theme.colors.activeTextColor
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -73,23 +81,66 @@ fun AlarmItem(
                 Text(
                     text = "8:30 ",
                     fontSize = 36.sp,
-                    color = Color.White
+                    color = Theme.colors.activeTextColor
                 )
-                Text(text = "AM", fontSize = 18.sp, color = Color.White)
             }
-
-            ClickableText(
-                text = AnnotatedString("S  M  T  W  T  F  S"),
-                onClick = { offset ->
-                    Log.d("letter", "AlarmItem: $offset character is clicked")
-                },
-                style = TextStyle(color = Color.White)
-            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Switch(checked = false, onCheckedChange = { })
+                ClickableText(
+                    text = AnnotatedString("S  M  T  W  T  F  S"),
+                    onClick = { offset ->
+                        Log.d("letter", "AlarmItem: $offset character is clicked")
+                    },
+                    style = TextStyle(color = Theme.colors.inactiveTextColor)
+                )
+                Switch(checked = checked, onCheckedChange = { checked = !checked })
+            }
+            if (expandedState) {
+                Column() {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "S",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                        Text(
+                            text = "M",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                        Text(
+                            text = "T",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                        Text(
+                            text = "W",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                        Text(
+                            text = "T",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                        Text(
+                            text = "F",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                        Text(
+                            text = "S",
+                            color = Theme.colors.activeTextColor,
+                            fontSize = 26.sp
+                        )
+                    }
+                    Text(text = "Delete")
+                }
             }
         }
     }
